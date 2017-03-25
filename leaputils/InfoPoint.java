@@ -44,5 +44,7 @@ public class InfoPoint {
 		elbow.scale(r, zeroImg);
 		palm.scale(r, zeroImg);
 	}
-	
+	public void project(Pt origin, Pt xunit, Pt yunit) {
+		
+	}
 }
