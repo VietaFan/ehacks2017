@@ -3,59 +3,44 @@ package graphics;
 import java.awt.*;
 import java.awt.event.*;
 
-public class InputMonitor implements KeyListener, MouseListener {
-	public boolean pressed[] = new boolean[256];
-	public int mousex, mousey;
+import gamemech.GameState;
+
+public class InputMonitor implements KeyListener {
+	private GameState state;
+	
+	public InputMonitor(HandGraphics comp) {
+		this.state = comp.state;
+		comp.addKeyListener(this);
+	}
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void keyReleased(KeyEvent arg0) {
 		// TODO Auto-generated method stub
-		
+		switch (state.getMode()) {
+		default:
+			switch(arg0.getKeyCode()) {
+			case KeyEvent.VK_R:
+				if (arg0.isShiftDown()) 
+					state.startNew(state.getMode());
+				break;				
+			case KeyEvent.VK_RIGHT:
+				state.startNew((state.getMode()+1)%GameState.NUM_STATES);
+				break;
+			case KeyEvent.VK_LEFT:
+				state.startNew((state.getMode()+GameState.NUM_STATES-1)%GameState.NUM_STATES);
+				break;
+			}
+		}
 	}
 
 	@Override
 	public void keyTyped(KeyEvent arg0) {
 		// TODO Auto-generated method stub
 		
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		mousex = arg0.getX();
-		mousey = arg0.getY();
-	}
-
-	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		mousex = arg0.getX();
-		mousey = arg0.getY();
-	}
-
-	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		mousex = arg0.getX();
-		mousey = arg0.getY();
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		mousex = arg0.getX();
-		mousey = arg0.getY();
 	}
 	
 }

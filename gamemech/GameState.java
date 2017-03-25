@@ -1,11 +1,19 @@
 package gamemech;
 public class GameState {
 	final int maxDelay = 5000, delayConst = 50000000;
-	private int points, lives;
+	public final static int NUM_STATES = 3;
+	final int[] defaultLives = {3, 3, 3};
+	private int points, lives, gamemode;
 	private long lastRestart;
-	public GameState(int nlives) {
+	private boolean restarted;
+	public GameState(int mode, int nlives) {		
+		gamemode = mode;
 		lives = nlives;
 		lastRestart = System.currentTimeMillis();
+		restarted = true;
+	}
+	public int getMode() {
+		return gamemode;
 	}
 	public boolean die() {
 		--lives;
@@ -28,5 +36,17 @@ public class GameState {
 	}
 	public long getLastRestart() {
 		return lastRestart;
+	}
+	public void startNew(int mode) {
+		gamemode = mode;
+		lives = defaultLives[mode];
+		points = 0;
+		lastRestart = System.currentTimeMillis();
+		restarted = true;
+	}
+	public boolean hasRestarted() {
+		boolean temp = restarted;
+		restarted = false;
+		return temp;
 	}
 }
