@@ -6,4 +6,7 @@ public class IntPoint {
 		this.x = x;
 		this.y = y;
 	}
+	public void verticalReflect(int h) {
+		this.y = h-y;
+	}
 }

@@ -1,6 +1,6 @@
-package graphics;
+package gamemech;
 public class GameState {
-	final int maxDelay = 10000, delayConst = 100000000;
+	final int maxDelay = 5000, delayConst = 50000000;
 	private int points, lives;
 	private long lastRestart;
 	public GameState(int nlives) {
@@ -24,6 +24,9 @@ public class GameState {
 		return lives;
 	}
 	public int getShapeDelay() {
-		return (int)Math.min(maxDelay, 1.0*delayConst/lastRestart);
+		return (int)Math.min(maxDelay, 1.0*delayConst/(System.currentTimeMillis()-lastRestart+1));
+	}
+	public long getLastRestart() {
+		return lastRestart;
 	}
 }

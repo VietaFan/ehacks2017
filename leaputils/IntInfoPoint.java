@@ -14,4 +14,13 @@ public class IntInfoPoint {
 		armdir = new IntPoint((int)ip.armdir.x, (int)ip.armdir.y);
 		palm = new IntPoint((int)ip.palm.x, (int)ip.palm.y);
 	}
+	public void verticalReflect(int h) {
+		for (int i=0; i<5; ++i)
+			for (int j=0; j<4; ++j)
+				for (int k=0; k<2; ++k)
+					fpts[i][j][k].verticalReflect(h);
+		wrist.verticalReflect(h);
+		elbow.verticalReflect(h);
+		palm.verticalReflect(h);
+	}
 }

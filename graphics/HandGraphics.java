@@ -4,14 +4,17 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
+import gamemech.*;
+
 public class HandGraphics extends GraphicsBase {
 	private LeapReader lr;
 	Random rand;
 	boolean holes;
 	boolean polygons;
 	private int deltaHoles;
-	private long nextSet;
+	private long nextSet, nextShapeTime;
 	private ArrayList<int[]> coords;
+	private GameShape nextShape;
 	private GameState state;
 	
 	public HandGraphics(int width, int height, String titleStr, LeapReader lr) {
@@ -28,6 +31,8 @@ public class HandGraphics extends GraphicsBase {
 		nextSet = System.currentTimeMillis();
 		coords = new ArrayList<int[]>();
 		state = new GameState(3);
+		nextShapeTime = System.currentTimeMillis()+state.getShapeDelay();
+		nextShape = GameShape.getNextShape(0, nextShapeTime);
 	}
 
 	@Override
@@ -36,20 +41,38 @@ public class HandGraphics extends GraphicsBase {
 		ip.scale(1.2, new Pt(320, 0, 0));
 		//IntInfoPoint proj = ip.intProject(new Pt(0, 200, 0), new Pt(1, 1, 0), new Pt(0, 1, 1));
 		IntInfoPoint proj = ip.toIntInfoPoint();
+		proj.verticalReflect(height);
 		bufWin.setColor(Color.BLUE);
-		bufWin.drawOval(proj.palm.x, height - proj.palm.y, 3, 3);
+		bufWin.drawOval(proj.palm.x, proj.palm.y, 3, 3);
 		for (int i=0; i<5; ++i) {
-			bufWin.drawLine(proj.palm.x, height - proj.palm.y, proj.fpts[i][0][0].x, height - proj.fpts[i][0][0].y);
-			bufWin.drawLine(proj.wrist.x, height - proj.wrist.y, proj.fpts[i][0][0].x, height - proj.fpts[i][0][0].y);
+			bufWin.drawLine(proj.palm.x, proj.palm.y, proj.fpts[i][0][0].x, proj.fpts[i][0][0].y);
+			bufWin.drawLine(proj.wrist.x, proj.wrist.y, proj.fpts[i][0][0].x, proj.fpts[i][0][0].y);
 			for (int j=0; j<4; j++) {
-				bufWin.drawLine(proj.fpts[i][j][0].x, height - proj.fpts[i][j][0].y, 
-						proj.fpts[i][j][1].x, height - proj.fpts[i][j][1].y);
+				bufWin.drawLine(proj.fpts[i][j][0].x, proj.fpts[i][j][0].y, 
+						proj.fpts[i][j][1].x, proj.fpts[i][j][1].y);
 			}
 		}
 		
 		bufWin.drawString(String.format("Lives remaining: %d", state.getLives()), 100, 100);
 		bufWin.drawString(String.format("Current Score: %d", state.getScore()), 100, 70);
 				
+		long curTime = System.currentTimeMillis();
+		
+		int r = Math.min(255,(int)(255.0*nextShape.getFracDone()));
+		bufWin.setColor(new Color(r, 255-r, 0));
+		Rectangle box = (Rectangle)nextShape.getCurrentPos();
+		bufWin.drawRect(box.x, box.y, box.width, box.height);
+		
+		if (curTime > nextShapeTime) {
+			if (nextShape.intersects(proj)) {
+				state.die();
+			} else if (nextShape.contains(proj)) {
+				state.score(nextShape.getValue());
+			}
+			nextShape = GameShape.getNextShape(curTime-state.getLastRestart(), curTime + state.getShapeDelay());
+			nextShapeTime = curTime + state.getShapeDelay();
+		}
+		
 		if(holes){
 			
 			int[] cds = {-100, -100};
@@ -65,7 +88,7 @@ public class HandGraphics extends GraphicsBase {
 				boolean removed = false;
 				for (int i=0; i<5; ++i) {
 					for (int j=0; j<4; j++) {
-						if(inHole(cdes[0], cdes[1], 20, proj.fpts[i][j][0].x, height - proj.fpts[i][j][0].y, proj.fpts[i][j][1].x, height - proj.fpts[i][j][1].y)){
+						if(inHole(cdes[0], cdes[1], 20, proj.fpts[i][j][0].x, proj.fpts[i][j][0].y, proj.fpts[i][j][1].x, height - proj.fpts[i][j][1].y)){
 							toRemove.add(cdes);
 							// System.out.println(cdes[0] + " " + cdes[1] + " " + proj.fpts[i][j][0].x + " " + (height - proj.fpts[i][j][0].y) + " " + proj.fpts[i][j][1].x + " " +  (height - proj.fpts[i][j][1].y));
 							removed = true;
@@ -80,6 +103,7 @@ public class HandGraphics extends GraphicsBase {
 			}
 			for (int[] cdes: toRemove) {
 				coords.remove(cdes);
+				state.score(1);
 			}
 		}
 		
