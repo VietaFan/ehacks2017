@@ -6,6 +6,7 @@ public class GameState {
 	private int points, lives, gamemode;
 	private long lastRestart;
 	private boolean restarted;
+	private double x, y;
 	public GameState(int mode, int nlives) {		
 		gamemode = mode;
 		lives = nlives;

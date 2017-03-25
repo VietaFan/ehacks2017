@@ -44,6 +44,11 @@ public class HandGraphics extends GraphicsBase {
 		bkgColor = Color.WHITE;
 	}
 	
+	public void init0() {
+		state = new GameState(0,3);
+		bkgColor = new Color(128,128,255);
+	}
+	
 	public void update1() {
 		InfoPoint ip = lr.poll();
 		ip.scale(1.2, new Pt(320, -180, 0));
@@ -151,6 +156,8 @@ public class HandGraphics extends GraphicsBase {
 		
 		}
 	}
+	
+	
 	
 	public void update3() {
 		ArrayList<InfoPoint> iplist = lr.pollAll();
