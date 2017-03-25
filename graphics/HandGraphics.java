@@ -25,7 +25,7 @@ public class HandGraphics extends GraphicsBase {
 		this.lr = lr;
 		this.holes = holes;
 		rand = new Random();
-		deltaHoles = 3000;
+		deltaHoles = 1000;
 		nextSet = System.currentTimeMillis();
 		coords = new ArrayList<int[]>();
 		state = new GameState(3);
@@ -65,6 +65,7 @@ public class HandGraphics extends GraphicsBase {
 					for (int j=0; j<4; j++) {
 						if(inHole(cdes[0], cdes[1], 20, proj.fpts[i][j][0].x, height - proj.fpts[i][j][0].y, proj.fpts[i][j][1].x, height - proj.fpts[i][j][1].y)){
 							toRemove.add(cdes);
+							System.out.println(cdes[0] + " " + cdes[1] + " " + proj.fpts[i][j][0].x + " " + (height - proj.fpts[i][j][0].y) + " " + proj.fpts[i][j][1].x + " " +  (height - proj.fpts[i][j][1].y));
 							removed = true;
 						}
 					}					
@@ -86,9 +87,13 @@ public class HandGraphics extends GraphicsBase {
 		// center = (hx + d/2, hy + d/2)
 		double cx = hx + d/2.0;
 		double cy = hy + d/2.0;
+		/**
 		double a1 = ((hx-fingx1)*(fingx2-fingx1)+(hy-fingy1)*(fingy2-fingy1))*((hx-fingx1)*(fingx2-fingx1)+(hy-fingy1)*(fingy2-fingy1));
 		double a2 = (fingx2-fingx1)*(fingx2-fingx1)+(fingy2-fingy1)*(fingy2-fingy1);
 		return (hx - fingx1)*(hx-fingx1) + (hy-fingy1)*(hy-fingy1) < (d/2.0)*(d/2.0) + a1/a2;
+		*/
+		return((fingx1-cx)*(fingx1-cx) + (fingy1-cy)*(fingy1-cy) < (d/2.0)*(d/2.0) || 
+				(fingx2-cx)*(fingx2-cx) + (fingy2-cy)*(fingy2-cy) < (d/2.0)*(d/2.0));
 	}
 	
 	public static void main(String[] args) {
