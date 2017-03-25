@@ -31,10 +31,21 @@ public class DynamicBackground extends GraphicsBase {
 						proj.fpts[i][j][1].x, height - proj.fpts[i][j][1].y);
 				
 			}
-			Color handColor = new Color(Math.min(255, 7*Math.abs(proj.fpts[i][0][0].x - proj.fpts[i][0][1].x)), Math.min(255, 7*Math.abs(proj.fpts[i][1][0].x - proj.fpts[i][1][1].x)),
+			Color handColor1 = new Color(Math.min(255, 7*Math.abs(proj.fpts[i][0][0].x - proj.fpts[i][0][1].x)), Math.min(255, 7*Math.abs(proj.fpts[i][1][0].x - proj.fpts[i][1][1].x)),
 					Math.min(255, 7*Math.abs(proj.fpts[i][2][0].x - proj.fpts[i][2][1].x)));
-			gr.setBackground(handColor);
-			gr.clearRect(0, 0, width, height);
+			Color handColor2 = new Color(Math.min(255, 7*Math.abs(proj.fpts[i][1][0].x - proj.fpts[i][1][1].x)), Math.min(255, 7*Math.abs(proj.fpts[i][2][0].x - proj.fpts[i][2][1].x)),
+					Math.min(255, 7*Math.abs(proj.fpts[i][3][0].x - proj.fpts[i][3][1].x)));
+			Color handColor3 = new Color(Math.min(255, 7*Math.abs(proj.fpts[i][2][0].x - proj.fpts[i][2][1].x)), Math.min(255, 7*Math.abs(proj.fpts[i][3][0].x - proj.fpts[i][3][1].x)),
+					Math.min(255, 7*Math.abs(proj.fpts[i][0][0].x - proj.fpts[i][0][1].x)));
+			//gr.setBackground(handColor1);
+			//gr.clearRect(0, 0, width/2, height/2);
+			//gr.setBackground(handColor2);
+			//gr.clearRect(width/2, 0, width, height/2);
+			bufWin.setColor(handColor1);
+			bufWin.fillRect(0, 0, width/2, height/2);
+			bufWin.setColor(handColor2);
+			bufWin.fillRect(width/2, 0, width, height/2);
+			bkgColor = handColor3;
 		
 		}
 		
