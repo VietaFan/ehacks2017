@@ -16,8 +16,7 @@ public class HandGraphics extends GraphicsBase {
 	
 	public HandGraphics(int width, int height, String titleStr, LeapReader lr) {
 		super(width, height, titleStr);
-		this.lr = lr;
-	
+		this.lr = lr;	
 	}
 	
 	public HandGraphics(int width, int height, String titleStr, LeapReader lr, boolean holes, boolean polygons) {
@@ -48,6 +47,9 @@ public class HandGraphics extends GraphicsBase {
 			}
 		}
 		
+		bufWin.drawString(String.format("Lives remaining: %d", state.getLives()), 100, 100);
+		bufWin.drawString(String.format("Current Score: %d", state.getScore()), 100, 70);
+				
 		if(holes){
 			
 			int[] cds = {-100, -100};
