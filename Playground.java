@@ -7,7 +7,13 @@ import java.util.*;
 import java.io.*;
 public class Playground {
 	public static void main(String[] args) throws Exception {
-		try {
+		GameSocket2 gs = new GameSocket2();
+		while (true) {
+			String s = gs.recv();
+			if (s != null)
+				System.out.println(s);
+		}
+		/*try {
 			System.out.println(InetAddress.getLocalHost().getHostAddress());
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block

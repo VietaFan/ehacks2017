@@ -1,5 +1,6 @@
 package graphics;
 import leaputils.*;
+import coms.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
@@ -16,11 +17,13 @@ public class HandGraphics extends GraphicsBase {
 	private ArrayList<int[]> coords;
 	private GameShape nextShape;
 	GameState state;
+	GameSocket gs;
 	private InputMonitor inmtr;
 	
 	public HandGraphics(int width, int height, String titleStr, LeapReader lr) {
 		super(width, height, titleStr);
 		this.lr = lr;	
+		gs = new GameSocket();
 		rand = new Random();
 	}
 	
@@ -29,6 +32,7 @@ public class HandGraphics extends GraphicsBase {
 		super(width, height, titleStr);
 		this.lr = lr;
 		rand = new Random();
+		gs = new GameSocket();
 		init1(holes, polygons);
 	}
 	
@@ -51,6 +55,8 @@ public class HandGraphics extends GraphicsBase {
 	
 	public void update1() {
 		InfoPoint ip = lr.poll();
+		gs.sendHandPosition(ip);
+		gs.sendGameState(state);
 		ip.scale(1.2, new Pt(320, -180, 0));
 		//IntInfoPoint proj = ip.intProject(new Pt(0, 200, 0), new Pt(1, 1, 0), new Pt(0, 1, 1));
 		IntInfoPoint proj = ip.toIntInfoPoint();
@@ -84,6 +90,7 @@ public class HandGraphics extends GraphicsBase {
 			}
 			nextShape = GameShape.getNextShape(curTime-state.getLastRestart(), curTime + state.getShapeDelay());
 			nextShapeTime = curTime + state.getShapeDelay();
+			gs.sendRectanglePosition((Rectangle)nextShape.getShape());
 		}
 		
 		if(holes){
@@ -93,7 +100,8 @@ public class HandGraphics extends GraphicsBase {
 					cds[0] = rand.nextInt(580)+20;
 					cds[1] = rand.nextInt(420)+20;
 					bufWin.drawOval(cds[0], cds[1], 20, 20);
-					coords.add(cds);			
+					coords.add(cds);	
+					gs.sendNewCircle(cds[0], cds[1]);
 				nextSet = System.currentTimeMillis();
 			}
 			ArrayList<int[]> toRemove = new ArrayList<int[]>();
@@ -116,6 +124,7 @@ public class HandGraphics extends GraphicsBase {
 
 			}
 			for (int[] cdes: toRemove) {
+				gs.sendCircleGone(cdes[0], cdes[1]);
 				coords.remove(cdes);
 				state.score(1);
 			}

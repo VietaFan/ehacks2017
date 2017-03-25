@@ -4,14 +4,11 @@ import coms.*;
 import gamemech.*;
 import leaputils.*;
 
-public class GameSocket {
+public class GameSocket2 {
 	SocketComs cout;
 	SocketClient cin;
-	public GameSocket() {
+	public GameSocket2() {
 		cout = new SocketComs();
-		while (cout.others.size() == 0) {
-			cout.updateOthers();
-		}
 		cin = new SocketClient();		
 	}
 	public void send(String s) {
