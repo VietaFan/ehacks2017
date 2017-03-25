@@ -13,14 +13,16 @@ public class HandGraphics extends GraphicsBase {
 	public void update() {
 		InfoPoint ip = lr.poll();
 		ip.scale(1.2, new Pt(320, 0, 0));
-		int palmx = (int)ip.palm.x, palmy = (int)ip.palm.y;
+		//IntInfoPoint proj = ip.intProject(new Pt(0, 200, 0), new Pt(1, 1, 0), new Pt(0, 1, 1));
+		IntInfoPoint proj = ip.toIntInfoPoint();
 		bufWin.setColor(Color.BLUE);
-		bufWin.drawOval(palmx, palmy, 3, 3);
+		bufWin.drawOval(proj.palm.x, proj.palm.y, 3, 3);
 		for (int i=0; i<5; ++i) {
-			bufWin.drawLine(palmx, palmy, (int)ip.fpts[i][0][0].x, (int)ip.fpts[i][0][0].y);
+			bufWin.drawLine(proj.palm.x, proj.palm.y, proj.fpts[i][0][0].x, proj.fpts[i][0][0].y);
+			bufWin.drawLine(proj.wrist.x, proj.wrist.y, proj.fpts[i][0][0].x, proj.fpts[i][0][0].y);
 			for (int j=0; j<4; j++) {
-				bufWin.drawLine((int)ip.fpts[i][j][0].x, (int)ip.fpts[i][j][0].y, 
-						(int)ip.fpts[i][j][1].x, (int)ip.fpts[i][j][1].y);
+				bufWin.drawLine(proj.fpts[i][j][0].x, proj.fpts[i][j][0].y, 
+						proj.fpts[i][j][1].x, proj.fpts[i][j][1].y);
 			}
 		}
 	}

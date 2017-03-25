@@ -18,6 +18,7 @@ public abstract class GraphicsBase extends JFrame {
 		setTitle(titleStr);
 		setSize(width, height);
 		setResizable(false);
+		setDefaultCloseOperation(EXIT_ON_CLOSE); 
 		setVisible(true);
 		win = getGraphics();
 		buf = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
