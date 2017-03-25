@@ -42,19 +42,19 @@ public class Ragdoll extends GraphicsBase{
 		proj.verticalReflect(height);
 		bufWin.setColor(Color.BLUE);
 //		bufWin.drawOval(proj.palm.x, proj.palm.y, 3, 3);
-		
+		bufWin.drawLine(500, 100, 500, 200);
 		//draw head
 		bufWin.drawOval(proj.fpts[2][3][1].x, proj.fpts[2][3][1].y, 10, 10);
 		//draw body line
-		bufWin.drawLine(proj.fpts[2][3][1].x, proj.fpts[2][3][1].y-10, proj.fpts[2][3][1].x, proj.fpts[2][3][1].y-75);
+		bufWin.drawLine(proj.fpts[2][3][1].x, proj.fpts[2][3][1].y+10, proj.fpts[2][3][1].x, proj.fpts[2][3][1].y+75);
 		//draw left arm
-		bufWin.drawLine(proj.fpts[1][3][1].x, proj.fpts[1][3][1].y, proj.fpts[2][3][1].x, proj.fpts[2][3][1].y-30);
+		bufWin.drawLine(proj.fpts[1][3][1].x, proj.fpts[1][3][1].y, proj.fpts[2][3][1].x, proj.fpts[2][3][1].y+30);
 		//draw right arm
-		bufWin.drawLine(proj.fpts[3][3][1].x, proj.fpts[3][3][1].y, proj.fpts[2][3][1].x, proj.fpts[2][3][1].y-30);
+		bufWin.drawLine(proj.fpts[3][3][1].x, proj.fpts[3][3][1].y, proj.fpts[2][3][1].x, proj.fpts[2][3][1].y+30);
 		//draw left leg
-		bufWin.drawLine(proj.fpts[0][3][1].x, proj.fpts[0][3][1].y, proj.fpts[2][3][1].x, proj.fpts[2][3][1].y-75);
+		bufWin.drawLine(proj.fpts[0][3][1].x, proj.fpts[0][3][1].y, proj.fpts[2][3][1].x, proj.fpts[2][3][1].y+75);
 		//draw right leg
-		bufWin.drawLine(proj.fpts[0][3][1].x, proj.fpts[0][3][1].y, proj.fpts[2][3][1].x, proj.fpts[2][3][1].y-75);
+		bufWin.drawLine(proj.fpts[0][3][1].x, proj.fpts[0][3][1].y, proj.fpts[2][3][1].x, proj.fpts[2][3][1].y+75);
 		
 //		for (int i=0; i<5; ++i) {
 ////			bufWin.drawLine(proj.palm.x, proj.palm.y, proj.fpts[i][0][0].x, proj.fpts[i][0][0].y);
