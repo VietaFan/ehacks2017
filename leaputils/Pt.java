@@ -18,5 +18,6 @@ public class Pt {
 			new double[] {origin.y, xunit.y, yunit.y},
 			new double[] {origin.z, xunit.x, yunit.x}
 		});
+		Matrix Minv = M.inverse();
 	}
 }

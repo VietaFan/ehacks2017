@@ -2,12 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/Users/Sam/Downloads/LeapDeveloperKit_3.2.0+45899_win/LeapDeveloperKit_3.2.0+45899_win/LeapSDK/lib/LeapJava.jar">
-		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Users/Sam/Downloads/LeapDeveloperKit_3.2.0+45899_win/LeapDeveloperKit_3.2.0+45899_win/LeapSDK/lib/x64"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Sam/Downloads/Jama-1.0.3.jar"/>
 	<classpathentry kind="lib" path="Jama-1.0.3.jar"/>
 	<classpathentry kind="lib" path="LeapJava.jar"/>
 	<classpathentry kind="output" path=""/>
