@@ -11,7 +11,7 @@ public class SocketComs {
 	public ArrayList<String> ips;
 	public SocketComs() {
 		try {
-			svr = new ServerSocket(13481);
+			svr = new ServerSocket(13482);
 			others = new ArrayList<Socket>();
 			ins = new ArrayList<BufferedReader>();
 			outs = new ArrayList<BufferedWriter>();
@@ -55,6 +55,14 @@ public class SocketComs {
 	public void sendLineTo(int i, String s) {
 		try {
 			outs.get(i).write(s+'\n');
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public void close() {
+		try {
+			svr.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

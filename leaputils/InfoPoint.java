@@ -44,6 +44,13 @@ public class InfoPoint {
 		vec = hand.palmPosition();
 		palm = new Pt(vec.getX(), vec.getY(), vec.getZ());
 	}
+	public InfoPoint() {
+		fpts = new Pt[5][4][2];
+		for (int i=0; i<5; i++)
+			for (int j=0; j<4; ++j)
+				for (int k=0; k<2; ++k)
+					fpts[i][j][k] = new Pt(0,0,0);
+	}
 	public void scale(double r, Pt zeroImg) {
 		for (int i=0; i<5; ++i)
 			for (int j=0; j<4; ++j)

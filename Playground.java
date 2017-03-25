@@ -7,14 +7,38 @@ import java.util.*;
 import java.io.*;
 public class Playground {
 	public static void main(String[] args) throws Exception {
+		try {
+			System.out.println(InetAddress.getLocalHost().getHostAddress());
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		SocketComs sc2 = new SocketComs();
+		while (sc2.others.size() == 0) {
+			sc2.updateOthers();
+		}
 		SocketClient sc = new SocketClient();
+		System.out.println("done");
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		while (true) {
-			sc.sendLine(br.readLine());
-			String s = sc.getLine();
-			while (s != null) {
-				System.out.println(s);
-				s = sc.getLine();
+			sc2.updateOthers();
+			for (int i=0; i<sc2.others.size(); ++i) {
+				try {
+				String s = sc2.getLineFrom(i).trim();
+				while (s != null) {
+					System.out.printf("%s: %s\n", sc2.ips.get(i), s);
+					s = sc2.getLineFrom(i);
+				}
+				} catch (Exception e) {
+					sc2.updateOthers();
+				}
+			}
+			if (br.ready())
+				sc.sendLine(br.readLine());
+			String t = sc.getLine();
+			while (t != null) {
+				System.out.println(t);
+				t = sc.getLine();
 			}
 		}
 		/*System.out.println("Hello, world\n");
@@ -22,13 +46,8 @@ public class Playground {
 			new double[] {7, 19, 22}});
 		M.print(3, 2);
 		System.out.println(3^2);*/
-		/*try {
-			System.out.println(InetAddress.getLocalHost().getHostAddress());
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		/*SocketComs sc = new SocketComs();
+		/*
+		SocketComs sc = new SocketComs();
 		while (true) {
 			sc.updateOthers();
 			for (int i=0; i<sc.others.size(); ++i) {
@@ -38,6 +57,8 @@ public class Playground {
 					s = sc.getLineFrom(i);
 				}
 			}
-		}*/
+		}
+		sc.close();
+		*/
 	}
 }

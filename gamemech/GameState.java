@@ -4,9 +4,8 @@ public class GameState {
 	public final static int NUM_STATES = 3;
 	final int[] defaultLives = {3, 3, 3};
 	private int points, lives, gamemode;
-	private long lastRestart;
-	private boolean restarted;
-	private double x, y;
+	public long lastRestart;
+	public boolean restarted;
 	public GameState(int mode, int nlives) {		
 		gamemode = mode;
 		lives = nlives;

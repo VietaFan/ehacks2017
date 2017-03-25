@@ -9,11 +9,12 @@ public class SocketClient {
 	BufferedReader in;
 	public SocketClient() {
 		try {
-			Socket s  = new Socket("192.168.56.1", 13481);
+			Socket s  = new Socket("10.60.14.150", 13481);
 			in = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			out = new DataOutputStream(s.getOutputStream());
 		} catch (Exception e) {
-			
+			e.printStackTrace();
+			System.out.println("BAD!");
 		}
 	}
 	public String getLine() {
