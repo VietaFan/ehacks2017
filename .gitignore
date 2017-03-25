@@ -6,3 +6,6 @@
 /InfoPoint.class
 /InputMonitor.class
 /Point.class
+/PlayerState.class
+/GameState.class
+/GameShape.class

@@ -72,4 +72,5 @@ public class InfoPoint {
 	public IntInfoPoint intProject(Pt origin, Pt xunit, Pt yunit) {
 		return project(origin, xunit, yunit).toIntInfoPoint();
 	}
+	
 }
