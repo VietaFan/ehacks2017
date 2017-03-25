@@ -53,6 +53,7 @@ class SampleListener extends Listener {
 
             // Get arm bone
             Arm arm = hand.arm();
+            
             System.out.println("  Arm direction: " + arm.direction()
                              + ", wrist position: " + arm.wristPosition()
                              + ", elbow position: " + arm.elbowPosition());
