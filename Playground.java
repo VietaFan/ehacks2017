@@ -5,5 +5,6 @@ public class Playground {
 		Matrix M = new Matrix(new double[][] { new double[] {3, 5, 6},
 			new double[] {7, 19, 22}});
 		M.print(3, 2);
+		System.out.println(3^2);
 	}
 }

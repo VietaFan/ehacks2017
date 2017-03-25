@@ -36,13 +36,13 @@ public class HandGraphics extends GraphicsBase {
 		//IntInfoPoint proj = ip.intProject(new Pt(0, 200, 0), new Pt(1, 1, 0), new Pt(0, 1, 1));
 		IntInfoPoint proj = ip.toIntInfoPoint();
 		bufWin.setColor(Color.BLUE);
-		bufWin.drawOval(proj.palm.x, proj.palm.y, 3, 3);
+		bufWin.drawOval(proj.palm.x, height - proj.palm.y, 3, 3);
 		for (int i=0; i<5; ++i) {
-			bufWin.drawLine(proj.palm.x, proj.palm.y, proj.fpts[i][0][0].x, proj.fpts[i][0][0].y);
-			bufWin.drawLine(proj.wrist.x, proj.wrist.y, proj.fpts[i][0][0].x, proj.fpts[i][0][0].y);
+			bufWin.drawLine(proj.palm.x, height - proj.palm.y, proj.fpts[i][0][0].x, height - proj.fpts[i][0][0].y);
+			bufWin.drawLine(proj.wrist.x, height - proj.wrist.y, proj.fpts[i][0][0].x, height - proj.fpts[i][0][0].y);
 			for (int j=0; j<4; j++) {
-				bufWin.drawLine(proj.fpts[i][j][0].x, proj.fpts[i][j][0].y, 
-						proj.fpts[i][j][1].x, proj.fpts[i][j][1].y);
+				bufWin.drawLine(proj.fpts[i][j][0].x, height - proj.fpts[i][j][0].y, 
+						proj.fpts[i][j][1].x, height - proj.fpts[i][j][1].y);
 			}
 		}
 		
@@ -50,22 +50,40 @@ public class HandGraphics extends GraphicsBase {
 			
 			int[] cds = {-100, -100};
 			if(System.currentTimeMillis() - nextSet > deltaHoles){
-				for(int i = 0; i < 5; i++){
 					cds[0] = rand.nextInt(580)+20;
 					cds[1] = rand.nextInt(420)+20;
 					bufWin.drawOval(cds[0], cds[1], 20, 20);
-					coords.add(cds);
-				}
+					coords.add(cds);			
 				nextSet = System.currentTimeMillis();
 			}
 			for(int[] cdes: coords){
-				bufWin.setColor(Color.RED);
-				bufWin.drawOval(cdes[0], cdes[1], 20, 20);
+				boolean removed = false;
+				for (int i=0; i<5; ++i) {
+					for (int j=0; j<4; j++) {
+						if(inHole(cdes[0], cdes[1], 20, proj.fpts[i][j][0].x, height - proj.fpts[i][j][0].y, proj.fpts[i][j][1].x, height - proj.fpts[i][j][1].y)){
+							coords.remove(cdes);
+							removed = true;
+						}
+					}
+				}
+				if(!removed){
+					bufWin.setColor(Color.RED);
+					bufWin.drawOval(cdes[0], cdes[1], 20, 20);
+				}
+
 			}
-			
-			
+	
 		}
 		
+	}
+	
+	public boolean inHole(int hx, int hy, int d, int fingx1, int fingy1, int fingx2, int fingy2){
+		// center = (hx + d/2, hy + d/2)
+		double cx = hx + d/2.0;
+		double cy = hy + d/2.0;
+		double a1 = ((hx-fingx1)*(fingx2-fingx1)+(hy-fingy1)*(fingy2-fingy1))*((hx-fingx1)*(fingx2-fingx1)+(hy-fingy1)*(fingy2-fingy1));
+		double a2 = (fingx2-fingx1)*(fingx2-fingx1)+(fingy2-fingy1)*(fingy2-fingy1);
+		return (hx - fingx1)*(hx-fingx1) + (hy-fingy1)*(hy-fingy1) < (d/2.0)*(d/2.0) + a1/a2;
 	}
 	
 	public static void main(String[] args) {
