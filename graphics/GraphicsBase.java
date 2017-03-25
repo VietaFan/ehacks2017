@@ -5,7 +5,7 @@ import java.awt.image.*;
 import javax.swing.*;
 
 public abstract class GraphicsBase extends JFrame {
-	private BufferedImage buf;
+	protected BufferedImage buf;
 	protected Graphics win, bufWin;
 	private Insets insets;
 	protected int width, height, fps, delta;

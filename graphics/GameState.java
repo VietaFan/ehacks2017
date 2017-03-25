@@ -1,4 +1,4 @@
-
+package graphics;
 public class GameState {
 	final int maxDelay = 10000, delayConst = 100000000;
 	private int points, lives;

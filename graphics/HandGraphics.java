@@ -12,6 +12,7 @@ public class HandGraphics extends GraphicsBase {
 	private int deltaHoles;
 	private long nextSet;
 	private ArrayList<int[]> coords;
+	private GameState state;
 	
 	public HandGraphics(int width, int height, String titleStr, LeapReader lr) {
 		super(width, height, titleStr);
@@ -27,6 +28,7 @@ public class HandGraphics extends GraphicsBase {
 		deltaHoles = 3000;
 		nextSet = System.currentTimeMillis();
 		coords = new ArrayList<int[]>();
+		state = new GameState(3);
 	}
 
 	@Override
@@ -56,15 +58,16 @@ public class HandGraphics extends GraphicsBase {
 					coords.add(cds);			
 				nextSet = System.currentTimeMillis();
 			}
+			ArrayList<int[]> toRemove = new ArrayList<int[]>();
 			for(int[] cdes: coords){
 				boolean removed = false;
 				for (int i=0; i<5; ++i) {
 					for (int j=0; j<4; j++) {
 						if(inHole(cdes[0], cdes[1], 20, proj.fpts[i][j][0].x, height - proj.fpts[i][j][0].y, proj.fpts[i][j][1].x, height - proj.fpts[i][j][1].y)){
-							coords.remove(cdes);
+							toRemove.add(cdes);
 							removed = true;
 						}
-					}
+					}					
 				}
 				if(!removed){
 					bufWin.setColor(Color.RED);
@@ -72,7 +75,9 @@ public class HandGraphics extends GraphicsBase {
 				}
 
 			}
-	
+			for (int[] cdes: toRemove) {
+				coords.remove(cdes);
+			}
 		}
 		
 	}
