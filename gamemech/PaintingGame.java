@@ -59,7 +59,7 @@ public class PaintingGame {
 			for (int j=0; j<i; ++j) 
 				chisq += Math.pow(ip.fpts[i][3][1].x-ip.fpts[j][3][1].x, 2)
 					  +  Math.pow(ip.fpts[i][3][1].y-ip.fpts[j][3][1].y, 2);
-		return chisq < 20000;
+		return chisq < 30000;
 	}
 	public boolean isReleased(IntInfoPoint ip) {
 		double chisq = 0.0;
@@ -67,7 +67,7 @@ public class PaintingGame {
 			for (int j=0; j<i; ++j) 
 				chisq += Math.pow(ip.fpts[i][3][1].x-ip.fpts[j][3][1].x, 2)
 					  +  Math.pow(ip.fpts[i][3][1].y-ip.fpts[j][3][1].y, 2);
-		return chisq > 60000;
+		return chisq > 80000;
 	}
 	public IntPoint getHandPoint(IntInfoPoint pt) {
 		double x = 0, y = 0;
