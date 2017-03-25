@@ -101,7 +101,4 @@ class Sample {
         controller.removeListener(listener);
     }
 }
-<<<<<<< HEAD
-=======
 
->>>>>>> 606722407fe7d6f0957664fbc4c38f39d54959b6
