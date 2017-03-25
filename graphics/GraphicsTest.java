@@ -1,3 +1,4 @@
+package graphics;
 import java.awt.*;
 import java.awt.image.*;
 
@@ -21,6 +22,9 @@ public class GraphicsTest extends JFrame {
 		win = getGraphics();
 		buf = new BufferedImage(640, 480, BufferedImage.TYPE_INT_RGB);
 		bufWin = buf.getGraphics();
+		Insets insets = getInsets(); 
+		setSize(insets.left + 640 + insets.right, 
+		                insets.top + 480 + insets.bottom); 
 		int x = 0;
 		while (true) {
 			x += 5; 
@@ -28,8 +32,8 @@ public class GraphicsTest extends JFrame {
 			bufWin.setColor(new Color(255, 255, 255));
 			bufWin.fillRect(0, 0, 640, 480);
 			bufWin.setColor(new Color(0, 255, 0));
-			bufWin.drawRect(x, 200, 40, 40);
-			win.drawImage(buf, 0, 0, this);
+			bufWin.drawRect(x, 10, 40, 40);
+			win.drawImage(buf, insets.left, insets.top, this);
 			try {
 				Thread.sleep(40);
 			} catch (InterruptedException e) {

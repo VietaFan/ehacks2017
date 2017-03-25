@@ -5,6 +5,7 @@
 * https://developer.leapmotion.com/sdk_agreement, or another agreement         *
 * between Leap Motion and you, your company or other organization.             *
 \******************************************************************************/
+package samples; 
 
 import java.io.IOException;
 import java.lang.Math;
@@ -35,7 +36,7 @@ class SampleListener extends Listener {
                          + ", timestamp: " + frame.timestamp()
                          + ", hands: " + frame.hands().count()
                          + ", fingers: " + frame.fingers().count());
-
+        
         //Get hands
         for(Hand hand : frame.hands()) {
             String handType = hand.isLeft() ? "Left hand" : "Right hand";
