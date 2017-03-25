@@ -1,12 +1,32 @@
 package graphics;
 import leaputils.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Random;
 
 public class HandGraphics extends GraphicsBase {
 	private LeapReader lr;
+	Random rand;
+	boolean holes;
+	boolean polygons;
+	private int deltaHoles;
+	private long nextSet;
+	private ArrayList<int[]> coords;
+	
 	public HandGraphics(int width, int height, String titleStr, LeapReader lr) {
 		super(width, height, titleStr);
 		this.lr = lr;
+	
+	}
+	
+	public HandGraphics(int width, int height, String titleStr, LeapReader lr, boolean holes, boolean polygons) {
+		super(width, height, titleStr);
+		this.lr = lr;
+		this.holes = holes;
+		rand = new Random();
+		deltaHoles = 3000;
+		nextSet = System.currentTimeMillis();
+		coords = new ArrayList<int[]>();
 	}
 
 	@Override
@@ -25,10 +45,31 @@ public class HandGraphics extends GraphicsBase {
 						proj.fpts[i][j][1].x, proj.fpts[i][j][1].y);
 			}
 		}
+		
+		if(holes){
+			
+			int[] cds = {-100, -100};
+			if(System.currentTimeMillis() - nextSet > deltaHoles){
+				for(int i = 0; i < 5; i++){
+					cds[0] = rand.nextInt(580)+20;
+					cds[1] = rand.nextInt(420)+20;
+					bufWin.drawOval(cds[0], cds[1], 20, 20);
+					coords.add(cds);
+				}
+				nextSet = System.currentTimeMillis();
+			}
+			for(int[] cdes: coords){
+				bufWin.setColor(Color.RED);
+				bufWin.drawOval(cdes[0], cdes[1], 20, 20);
+			}
+			
+			
+		}
+		
 	}
 	
 	public static void main(String[] args) {
-		HandGraphics hg = new HandGraphics(640, 480, "Hand Representer", new LeapReader());
+		HandGraphics hg = new HandGraphics(640, 480, "Hand Representer", new LeapReader(), true, true);
 		hg.run();
 		System.exit(0);
 	}
