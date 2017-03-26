@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Graphics2D;
 import java.util.Arrays;
-
 import leaputils.*;
 
 public class Lightsaber extends GraphicsBase {
