@@ -94,11 +94,14 @@ public class HandGraphics extends GraphicsBase {
 					JDialog jd = new JDialog();
 					jd.add(new JLabel("Game over."));
 					jd.add(new JLabel(String.format("Your score was %d.", state.getScore())));
-					jd.add(new JLabel("Enter your name below to have your score saved."));
-					JTextField jtf = new JTextField();
-					jd.add(jtf);
-					JButton b = new JButton("Submit");
-					jtf.add(b);
+//					jd.add(new JLabel("Enter your name below to have your score saved."));
+//					JTextField jtf = new JTextField();
+//					jd.add(jtf);
+//					JButton b = new JButton("Submit");
+//					jtf.add(b);
+					ScoreSender scoreSender = new ScoreSender();
+					scoreSender.sendPost(state.getScore());
+					scoreSender.receive();
 					
 				}
 			} else if (nextShape.contains(proj)) {
