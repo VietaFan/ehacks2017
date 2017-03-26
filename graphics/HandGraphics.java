@@ -13,26 +13,27 @@ public class HandGraphics extends GraphicsBase {
 	boolean holes;
 	boolean polygons;
 	private int deltaHoles;
-	private long nextSet, nextShapeTime;
+	private long nextSet, nextShapeTime, nextObsTime, increaseTime, nextFireTime;
 	private ArrayList<int[]> coords;
 	private GameShape nextShape;
 	GameState state;
 	GameSocket gs;
+	ObstacleGame og;
+	PaintingGame pg;
 	private InputMonitor inmtr;
-	
+		
 	public HandGraphics(int width, int height, String titleStr, LeapReader lr) {
 		super(width, height, titleStr);
 		this.lr = lr;	
-		gs = new GameSocket();
+	//	gs = new GameSocket();
 		rand = new Random();
 	}
-	
-	
+		
 	public HandGraphics(int width, int height, String titleStr, LeapReader lr, boolean holes, boolean polygons) {
 		super(width, height, titleStr);
 		this.lr = lr;
 		rand = new Random();
-		gs = new GameSocket();
+	//	gs = new GameSocket();
 		init1(holes, polygons);
 	}
 	
@@ -55,8 +56,8 @@ public class HandGraphics extends GraphicsBase {
 	
 	public void update1() {
 		InfoPoint ip = lr.poll();
-		gs.sendHandPosition(ip);
-		gs.sendGameState(state);
+		//gs.sendHandPosition(ip);
+		//gs.sendGameState(state);
 		ip.scale(1.2, new Pt(320, -180, 0));
 		//IntInfoPoint proj = ip.intProject(new Pt(0, 200, 0), new Pt(1, 1, 0), new Pt(0, 1, 1));
 		IntInfoPoint proj = ip.toIntInfoPoint();
@@ -90,7 +91,7 @@ public class HandGraphics extends GraphicsBase {
 			}
 			nextShape = GameShape.getNextShape(curTime-state.getLastRestart(), curTime + state.getShapeDelay());
 			nextShapeTime = curTime + state.getShapeDelay();
-			gs.sendRectanglePosition((Rectangle)nextShape.getShape());
+		//	gs.sendRectanglePosition((Rectangle)nextShape.getShape());
 		}
 		
 		if(holes){
@@ -101,7 +102,7 @@ public class HandGraphics extends GraphicsBase {
 					cds[1] = rand.nextInt(420)+20;
 					bufWin.drawOval(cds[0], cds[1], 20, 20);
 					coords.add(cds);	
-					gs.sendNewCircle(cds[0], cds[1]);
+					//gs.sendNewCircle(cds[0], cds[1]);
 				nextSet = System.currentTimeMillis();
 			}
 			ArrayList<int[]> toRemove = new ArrayList<int[]>();
@@ -124,7 +125,7 @@ public class HandGraphics extends GraphicsBase {
 
 			}
 			for (int[] cdes: toRemove) {
-				gs.sendCircleGone(cdes[0], cdes[1]);
+		//		gs.sendCircleGone(cdes[0], cdes[1]);
 				coords.remove(cdes);
 				state.score(1);
 			}
@@ -166,15 +167,80 @@ public class HandGraphics extends GraphicsBase {
 		}
 	}
 	
-	
+	public void init3() {
+		og = new ObstacleGame();
+		nextObsTime = System.currentTimeMillis()+1000;
+		increaseTime = nextObsTime+9000;
+		nextFireTime = nextObsTime;
+	}	
 	
 	public void update3() {
-		ArrayList<InfoPoint> iplist = lr.pollAll();
-		InfoPoint first = iplist.get(0), second = iplist.get(1);
-		double theta = Math.atan2(second.palm.y-first.palm.y, second.palm.x-first.palm.x);
-		
+		bufWin.setColor(Color.WHITE);
+		InfoPoint ip = lr.poll();
+		og.addPoint(ip.fpts[2][3][1].z);
+		int x = (int)(ip.palm.x*1.2+320);
+		if (x < og.playerx - ObstacleGame.maxPlayerSpeed) {
+			og.playerx -= ObstacleGame.maxPlayerSpeed;
+		} else if (x > og.playerx + ObstacleGame.maxPlayerSpeed) {
+			og.playerx += ObstacleGame.maxPlayerSpeed;
+		} else {
+			og.playerx = x;
+		}
+		if (System.currentTimeMillis() > increaseTime) {
+			increaseTime = System.currentTimeMillis()+10000;
+			og.prad += 3;
+		}
+		if (System.currentTimeMillis() > nextObsTime) {
+			og.addObstacle();
+			nextObsTime = System.currentTimeMillis()+1000;
+		}
+		og.move();
+		og.removeExtras();
+		og.draw(bufWin);
+		bufWin.setColor(Color.RED);
+		bufWin.fillOval((int)og.playerx, 360, og.prad, og.prad);
+		if (og.hit(og.playerx, 360, og.prad)) {
+			og.prad -= 3;
+			increaseTime = System.currentTimeMillis()+10000;
+		}
+		if (ip.fpts[2][3][1].z > og.getAvg() + 60 && 
+				System.currentTimeMillis() > nextFireTime) {
+			nextFireTime = System.currentTimeMillis()+500;
+			og.addProjectile();
+		}
 	}
 		
+	public void init4() {
+		pg = new PaintingGame();
+		bkgColor = new Color(192,192,192);
+	}
+	public void update4() {
+		pg.draw(bufWin, this);
+		InfoPoint ip = lr.poll();
+		ip.scale(1.2, new Pt(320, -60, 0));
+		IntInfoPoint proj = ip.toIntInfoPoint();
+		proj.verticalReflect(height);
+		if (pg.isGrabbing(proj)) {
+			pg.grabPoint(proj);
+		}
+		if (pg.getGrabbed() >= 0 && pg.isReleased(proj)) {
+			//pg.scatter(pg.getHandPoint(proj), 50, 40);
+			pg.initScatterSequence(pg.getHandPoint(proj));
+			pg.grab(-1);
+		}
+		pg.doScatters();
+		bufWin.setColor(Color.BLUE);
+		bufWin.drawOval(proj.palm.x, proj.palm.y, 3, 3);
+		for (int i=0; i<5; ++i) {
+			bufWin.drawLine(proj.palm.x, proj.palm.y, proj.fpts[i][0][0].x, proj.fpts[i][0][0].y);
+			bufWin.drawLine(proj.wrist.x, proj.wrist.y, proj.fpts[i][0][0].x, proj.fpts[i][0][0].y);
+			for (int j=0; j<4; j++) {
+				bufWin.drawLine(proj.fpts[i][j][0].x, proj.fpts[i][j][0].y, 
+						proj.fpts[i][j][1].x, proj.fpts[i][j][1].y);
+			}
+		}
+	}
+	
 	@Override
 	public void update() {
 		switch(state.getMode()) {
@@ -187,6 +253,20 @@ public class HandGraphics extends GraphicsBase {
 			break;
 		case 2:
 			update2();
+			break;
+		case 3:
+			if (state.hasRestarted()) {
+				init3();
+				state.hasRestarted();
+			}
+			update3();
+			break;
+		case 4:
+			if (state.hasRestarted()) {
+				init4();
+				state.hasRestarted();
+			}
+			update4();
 			break;
 		}
 		
