@@ -5,9 +5,6 @@ import java.awt.Frame;
 import java.awt.Graphics2D;
 import java.util.Arrays;
 
-//import java.lang.Object.*;
-//import javax.vecmath.Vector3d;
-
 import leaputils.*;
 
 public class Lightsaber extends GraphicsBase {
