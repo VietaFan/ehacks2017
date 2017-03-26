@@ -1,5 +1,6 @@
 package graphics;
 
+import java.awt.BorderLayout;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -8,7 +9,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -79,6 +84,7 @@ public class ScoreSender {
 		        
 		        String names[] = new String[10];
 		        int scores[] = new int[10];
+		        Object rowData[][] = new Object [10][2];
 		        
 		       System.out.println("here we go");
 		        final JSONArray topscores = idk.getJSONArray("topscores");
@@ -88,10 +94,28 @@ public class ScoreSender {
 //		        	System.out.println(person);
 		        	System.out.print((i-1) + "\t name: "+ person.getString("name"));
 		        	names[i-1] = person.getString("name");
+		        	rowData[i-1][0] = names[i-1];
 		        	System.out.println("\tscore: " + person.getInt ("score") );
 		        	scores[i-1] = person.getInt("score");
+		        	rowData[i-1][1] = scores[i-1];
 		        }
 		        
+		        String[] columnNames = {"name","score"};
+		        
+		        JFrame frame = new JFrame("High Scores");
+
+		        JPanel panel = new JPanel();
+		        panel.setLayout(new BorderLayout());
+
+		        JTable table = new JTable(rowData, columnNames);
+
+		        JScrollPane tableContainer = new JScrollPane(table);
+
+		        panel.add(tableContainer, BorderLayout.CENTER);
+		        frame.getContentPane().add(panel);
+
+		        frame.pack();
+		        frame.setVisible(true);
 		        
 
 		        
