@@ -5,6 +5,11 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+
 import gamemech.*;
 
 public class HandGraphics extends GraphicsBase {
@@ -85,7 +90,20 @@ public class HandGraphics extends GraphicsBase {
 		
 		if (curTime > nextShapeTime) {
 			if (nextShape.intersects(proj)) {
-				state.die();
+				if (state.die()) {
+					JDialog jd = new JDialog();
+					jd.add(new JLabel("Game over."));
+					jd.add(new JLabel(String.format("Your score was %d.", state.getScore())));
+//					jd.add(new JLabel("Enter your name below to have your score saved."));
+//					JTextField jtf = new JTextField();
+//					jd.add(jtf);
+//					JButton b = new JButton("Submit");
+//					jtf.add(b);
+					ScoreSender scoreSender = new ScoreSender();
+					scoreSender.sendPost(state.getScore());
+					scoreSender.receive();
+					
+				}
 			} else if (nextShape.contains(proj)) {
 				state.score(nextShape.getValue());
 			}
