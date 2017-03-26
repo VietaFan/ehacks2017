@@ -2,7 +2,9 @@ package graphics;
 
 import java.awt.Color;
 import java.awt.Frame;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -11,7 +13,7 @@ import java.util.Random;
 import leaputils.*;
 
 // If the user has an item, then moving around and such will reveal the password
-public class PartyRoom extends GraphicsBase {
+public class PartyRoom {
 	private LeapReader lr;
 	private int[] rex = {16, 17, 18, 19, 20, 21, 23, 24, 26, 27, 30, 32, 33, 35, 36, 38, 40, 42, 43, 46, 48, 50, 51, 52, 53, 55};
 	private static boolean[] fallenOff = new boolean[64];
@@ -21,9 +23,13 @@ public class PartyRoom extends GraphicsBase {
 	private int counter;
 	public boolean hasHammer = true; // should be an instance variable of each game
 	
-	
+	BufferedImage buf;
+	Graphics bufWin;
+	int width, height;
 	public PartyRoom(int width, int height, String titleStr, LeapReader lr) {
-		super(width, height, titleStr);
+		buf = new BufferedImage(640, 480, BufferedImage.TYPE_INT_RGB);
+		bufWin = buf.getGraphics();
+		this.width = width; this.height = height;
 		this.lr = lr;
 		for(int i = 0; i < 64; i++){
 			order.add(i);
@@ -94,10 +100,10 @@ public class PartyRoom extends GraphicsBase {
 		}
 		return false;
 	}
-
+/*
 	public static void main(String[] args) {
 		PartyRoom db = new PartyRoom(640, 480, "Party Room", new LeapReader());
 		db.run();
 		System.exit(0);
-	}
+	}*/
 }

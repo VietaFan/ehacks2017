@@ -1,6 +1,7 @@
 package graphics;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -12,22 +13,27 @@ import javax.imageio.ImageIO;
 import leaputils.*;
 
 // A room leading to the party room.
-public class Store extends GraphicsBase {
+public class Store{
 	private LeapReader lr;
 	BufferedImage img = null;
+	BufferedImage buf;
+	Graphics bufWin;
 	public boolean hasHammer = true; // should be an instance variable of each game
 	private ArrayList<Integer> order = new ArrayList<Integer>();
-	
+	int width, height;
 	public Store(int width, int height, String titleStr, LeapReader lr) {
-		super(width, height, titleStr);
+		//super(width, height, titleStr);
+		buf = new BufferedImage(640, 480, BufferedImage.TYPE_INT_RGB);
+		bufWin = buf.getGraphics();
+		this.width = width; this.height = height;
 		this.lr = lr;
-
 		try {
 		    img = ImageIO.read(new File("images/tools.jpg"));
 		    System.out.println(0);
 		} catch (IOException e) {
 			System.out.println(Thread.currentThread().getStackTrace());
 		}
+		
 	}
 
 	
@@ -52,10 +58,10 @@ public class Store extends GraphicsBase {
 		}
 		
 	}
-
+/*
 	public static void main(String[] args) {
 		Store st = new Store(640, 480, "Store", new LeapReader());
 		st.run();
 		System.exit(0);
-	}
+	}*/
 }

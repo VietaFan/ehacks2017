@@ -7,6 +7,7 @@ import java.util.*;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import gamemech.*;
@@ -26,6 +27,10 @@ public class HandGraphics extends GraphicsBase {
 	PaintingGame pg;
 	PointCounter pc;
 	Lightsaber2 saber;
+	Restroom rr;
+	Store store;
+	Limbo limbo;
+	PartyRoom pr;
 	private ArrayList<Point> fruit;
 	private HashMap<Point, Integer> dyingFruit;
 	private HashMap<Point, int[]> segMap;
@@ -347,6 +352,61 @@ public class HandGraphics extends GraphicsBase {
 		}
 	}
 	
+	public void init6() {
+		bkgColor = Color.WHITE;
+	}
+	
+	public void update6() {
+		bufWin.setColor(Color.BLACK);
+		bufWin.drawString("press key to change state", 200, 80);
+		bufWin.drawString("left arrow -> coins", 200, 100);
+		bufWin.drawString("right arrow -> store", 200, 120);
+		bufWin.drawString("down arrow -> restroom", 200, 140);
+		bufWin.drawString("If you want to enter your password, hit ctrl+p.", 200, 160);
+		 
+	}
+	
+	public void init7() {
+		rr = new Restroom(640, 480, "", lr);
+	}
+	
+	public void update7() {
+		rr.update();
+		bufWin.drawImage(rr.buf, 0, 0, this);
+	}
+	
+	public void init8() {
+		store = new Store(640, 480, "", lr);
+	}
+	
+	public void update8() {
+		store.update();
+		bufWin.drawImage(store.buf, 0, 0, this);
+	}
+	public void init9() {
+		pr = new PartyRoom(640, 480, "", lr);
+	}
+	
+	public void update9() {
+		pr.update();
+		bufWin.drawImage(pr.buf, 0, 0, this);
+	}
+	public void init10() {
+		limbo = new Limbo(640, 480, "", lr);
+	}
+	
+	public void update10() {
+		limbo.update();
+		bufWin.drawImage(limbo.buf, 0, 0, this);
+	}
+	public void update0() {
+		String password = "";
+		password = JOptionPane.showInputDialog("Please enter your password: ");
+		if (password.toLowerCase().equals("rex"))
+			state.startNew(3);
+		else
+			state.startNew(6);
+	}
 	@Override
 	public void update() {
 		switch(state.getMode()) {
@@ -381,6 +441,44 @@ public class HandGraphics extends GraphicsBase {
 			}
 			update5();
 			break;
+		case 6:
+			if (state.hasRestarted()) {
+				init6();
+				state.hasRestarted();
+			}
+			update6();
+			break;
+		case 7:
+			if (state.hasRestarted()) {
+				init7();
+				state.hasRestarted();
+			}
+			update7();
+			break;
+		case 8:
+			if (state.hasRestarted()) {
+				init8();
+				state.hasRestarted();
+			}
+			update8();
+			break;
+		case 9:
+			if (state.hasRestarted()) {
+				init9();
+				state.hasRestarted();
+			}
+			update9();
+			break;
+		case 10:
+			if (state.hasRestarted()) {
+				init10();
+				state.hasRestarted();
+			}
+			update10();
+			break;
+		case 0:
+			update0();
+			break;
 		}
 		
 	}
@@ -401,6 +499,7 @@ public class HandGraphics extends GraphicsBase {
 	public static void main(String[] args) {
 		HandGraphics hg = new HandGraphics(640, 480, "Hand Representer", new LeapReader());
 		hg.init1(true, true);
+		hg.state.startNew(6);
 		hg.run();
 		System.exit(0);
 	}

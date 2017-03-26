@@ -1,6 +1,7 @@
 package graphics;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -12,14 +13,18 @@ import javax.imageio.ImageIO;
 import leaputils.*;
 
 // A room leading to the party room.
-public class Limbo extends GraphicsBase {
+public class Limbo {
 	private LeapReader lr;
 	BufferedImage img = null;
 	public boolean hasHammer = true; // should be an instance variable of each game
 	private ArrayList<Integer> order = new ArrayList<Integer>();
-	
+	BufferedImage buf;
+	Graphics bufWin;
+	int width, height;
 	public Limbo(int width, int height, String titleStr, LeapReader lr) {
-		super(width, height, titleStr);
+		buf = new BufferedImage(640, 480, BufferedImage.TYPE_INT_RGB);
+		bufWin = buf.getGraphics();
+		this.width = width; this.height = height;
 		this.lr = lr;
 
 		try {
@@ -56,10 +61,10 @@ public class Limbo extends GraphicsBase {
 		}
 		
 	}
-
+/*
 	public static void main(String[] args) {
 		Limbo lim = new Limbo(640, 480, "Limbo", new LeapReader());
 		lim.run();
 		System.exit(0);
-	}
+	}*/
 }

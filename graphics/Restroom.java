@@ -2,6 +2,7 @@ package graphics;
 
 import java.awt.Color;
 import java.awt.Frame;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
@@ -17,18 +18,22 @@ import javax.swing.JLabel;
 import leaputils.*;
 
 // A room leading to the party room.
-public class Restroom extends GraphicsBase {
+public class Restroom {
 	private LeapReader lr;
 	BufferedImage img = null;
 	public boolean hasHammer = true; // should be an instance variable of each game
 	private ArrayList<Integer> order = new ArrayList<Integer>();
 	private int deltaTime = 200;
 	private long current;
-	private int counter;
+	private int counter, width, height;
 	private boolean inside;
+	protected BufferedImage buf;
+	protected Graphics bufWin;
 	
 	public Restroom(int width, int height, String titleStr, LeapReader lr) {
-		super(width, height, titleStr);
+		buf = new BufferedImage(640, 480, BufferedImage.TYPE_INT_RGB);
+		bufWin = buf.getGraphics();
+		this.width = width; this.height = height;
 		this.lr = lr;
 		for(int i = 0; i < 64; i++){
 			order.add(i);
@@ -83,9 +88,9 @@ public class Restroom extends GraphicsBase {
 		
 	}
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		Restroom rr = new Restroom(640, 480, "Restroom", new LeapReader());
 		rr.run();
 		System.exit(0);
-	}
+	}*/
 }

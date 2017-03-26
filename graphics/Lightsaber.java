@@ -5,6 +5,11 @@ import java.awt.Frame;
 import java.awt.Graphics2D;
 import java.util.Arrays;
 
+import leaputils.InfoPoint;
+import leaputils.IntInfoPoint;
+import leaputils.LeapReader;
+import leaputils.Pt;
+
 
 public class Lightsaber extends GraphicsBase {
 	private LeapReader lr;

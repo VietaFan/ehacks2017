@@ -1,7 +1,7 @@
 package gamemech;
 public class GameState {
 	final int maxDelay = 5000, delayConst = 50000000;
-	public final static int NUM_STATES = 6;
+	public final static int NUM_STATES = 11;
 	final int[] defaultLives = {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3};
 	private int points, lives, gamemode;
 	public long lastRestart;
