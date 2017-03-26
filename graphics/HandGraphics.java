@@ -2,8 +2,7 @@ package graphics;
 import leaputils.*;
 import coms.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -25,11 +24,17 @@ public class HandGraphics extends GraphicsBase {
 	GameSocket gs;
 	ObstacleGame og;
 	PaintingGame pg;
+	PointCounter pc;
+	Lightsaber2 saber;
+	private ArrayList<Point> fruit;
+	private HashMap<Point, Integer> dyingFruit;
+	private HashMap<Point, int[]> segMap;
 	private InputMonitor inmtr;
 		
 	public HandGraphics(int width, int height, String titleStr, LeapReader lr) {
 		super(width, height, titleStr);
 		this.lr = lr;	
+		pc = new PointCounter();
 	//	gs = new GameSocket();
 		rand = new Random();
 	}
@@ -37,6 +42,7 @@ public class HandGraphics extends GraphicsBase {
 	public HandGraphics(int width, int height, String titleStr, LeapReader lr, boolean holes, boolean polygons) {
 		super(width, height, titleStr);
 		this.lr = lr;
+		pc = new PointCounter();
 		rand = new Random();
 	//	gs = new GameSocket();
 		init1(holes, polygons);
@@ -83,7 +89,7 @@ public class HandGraphics extends GraphicsBase {
 				
 		long curTime = System.currentTimeMillis();
 		
-		int r = Math.min(255,(int)(255.0*nextShape.getFracDone()));
+		int r = Math.max(0, Math.min(255,(int)(255.0*nextShape.getFracDone())));
 		bufWin.setColor(new Color(r, 255-r, 0));
 		Rectangle box = (Rectangle)nextShape.getCurrentPos();
 		bufWin.drawRect(box.x, box.y, box.width, box.height);
@@ -106,6 +112,7 @@ public class HandGraphics extends GraphicsBase {
 				}
 			} else if (nextShape.contains(proj)) {
 				state.score(nextShape.getValue());
+				pc.addPoints(nextShape.getValue());
 			}
 			nextShape = GameShape.getNextShape(curTime-state.getLastRestart(), curTime + state.getShapeDelay());
 			nextShapeTime = curTime + state.getShapeDelay();
@@ -146,6 +153,7 @@ public class HandGraphics extends GraphicsBase {
 		//		gs.sendCircleGone(cdes[0], cdes[1]);
 				coords.remove(cdes);
 				state.score(1);
+				pc.addPoints(1);
 			}
 		}
 	}
@@ -207,6 +215,8 @@ public class HandGraphics extends GraphicsBase {
 		if (System.currentTimeMillis() > increaseTime) {
 			increaseTime = System.currentTimeMillis()+10000;
 			og.prad += 3;
+			og.coins += 15;
+			pc.addPoints(15);
 		}
 		if (System.currentTimeMillis() > nextObsTime) {
 			og.addObstacle();
@@ -215,10 +225,14 @@ public class HandGraphics extends GraphicsBase {
 		og.move();
 		og.removeExtras();
 		og.draw(bufWin);
+		bufWin.setColor(Color.GREEN);
+		bufWin.drawString(String.format("Score: %d", og.coins), 50, 50);
 		bufWin.setColor(Color.RED);
 		bufWin.fillOval((int)og.playerx, 360, og.prad, og.prad);
-		if (og.hit(og.playerx, 360, og.prad)) {
+		if (og.hit(og.playerx, 360, og.prad, pc)) {
 			og.prad -= 3;
+			og.coins -= 5;
+			pc.addPoints(-5);
 			increaseTime = System.currentTimeMillis()+10000;
 		}
 		if (ip.fpts[2][3][1].z > og.getAvg() + 60 && 
@@ -226,8 +240,7 @@ public class HandGraphics extends GraphicsBase {
 			nextFireTime = System.currentTimeMillis()+500;
 			og.addProjectile();
 		}
-	}
-		
+	}		
 	public void init4() {
 		pg = new PaintingGame();
 		bkgColor = new Color(192,192,192);
@@ -259,6 +272,81 @@ public class HandGraphics extends GraphicsBase {
 		}
 	}
 	
+	public void init5() {
+		saber = new Lightsaber2(width, height);
+		fruit = new ArrayList<Point>();
+		dyingFruit = new HashMap<Point, Integer>();
+		segMap = new HashMap<Point, int[]>();
+		bkgColor = Color.WHITE;
+	}
+	
+	public void update5() {
+		InfoPoint ip = lr.poll();
+		ip.scale(1.2, new Pt(320, 0, 0));
+		saber.update(ip, bufWin);
+		//IntInfoPoint proj = ip.intProject(new Pt(0, 200, 0), new Pt(1, 1, 0), new Pt(0, 1, 1));
+		//IntInfoPoint proj = ip.toIntInfoPoint();
+		int seg[] = saber.getSegment(ip,  bufWin);
+		ArrayList<Point> z = new ArrayList<Point>();
+		HashSet<Point> removals = new HashSet<Point>();
+		for (Point f: fruit) {
+			if (f.getY() > 480) {
+				removals.add(f);
+			}
+			boolean hit = false;
+			for (double r = 0; r <= 1; r += .001) {
+				System.out.println(f.distance((int)(seg[0]*r+seg[2]*(1-r)), (int)((480-seg[1])*r+(480-seg[3])*(1-r))));
+				if (f.distance((int)(seg[0]*r+seg[2]*(1-r)), (int)((480-seg[1])*r+(480-seg[3])*(1-r))) < 40) {
+					hit = true;
+					double s = r;
+					while (s <= 1 && f.distance((int)(seg[0]*s+seg[2]*(1-s)), (int)((480-seg[1])*s+(480-seg[3])*(1-s))) < 40) {
+						s += 0.001;
+					}
+					segMap.put(f, new int[] {(int)(seg[0]*r+seg[2]*(1-r)), (int)(seg[1]*r+seg[3]*(1-r)),
+							(int)(seg[0]*s+seg[2]*(1-s)), (int)(seg[1]*s+seg[3]*(1-s))});
+					break;
+				}
+			}
+			if (hit) {
+				z.add(f);
+				
+			}
+		}
+		for (Point f: removals) {
+			fruit.remove(f);
+		}
+		for (Point p: z) {
+			fruit.remove(p);
+			dyingFruit.put(p, 0);
+		}
+		for (Point f: fruit) {
+			bufWin.setColor(Color.GREEN);
+			bufWin.fillOval(f.x, f.y, 80, 80);
+		}
+		removals = new HashSet<Point>();
+		for (Point f: dyingFruit.keySet()) {
+			bufWin.setColor(new Color(10*dyingFruit.get(f), 255, 10*dyingFruit.get(f)));
+			bufWin.fillOval(f.x, f.y, 80, 80);
+			if (dyingFruit.get(f) == 25) {
+				removals.add(f);
+			} else {
+				dyingFruit.put(f, dyingFruit.get(f)+1);
+			}
+			bufWin.setColor(Color.BLACK);
+			bufWin.drawLine(segMap.get(f)[0],segMap.get(f)[1],segMap.get(f)[2],segMap.get(f)[3]);
+		}
+		for (Point f: removals) {
+			dyingFruit.remove(f);
+			segMap.remove(f);
+		}
+		if (Math.random() < 0.009) {
+			fruit.add(new Point((int)(Math.random()*640), 0));
+		}
+		for (Point f: fruit) {
+			f.y += ((int)Math.random()*3)+3;
+		}
+	}
+	
 	@Override
 	public void update() {
 		switch(state.getMode()) {
@@ -285,6 +373,13 @@ public class HandGraphics extends GraphicsBase {
 				state.hasRestarted();
 			}
 			update4();
+			break;
+		case 5:
+			if (state.hasRestarted()) {
+				init5();
+				state.hasRestarted();
+			}
+			update5();
 			break;
 		}
 		

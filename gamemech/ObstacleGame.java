@@ -13,7 +13,9 @@ public class ObstacleGame {
 	public final int projRad = 6;
 	public final static double maxPlayerSpeed = 8.0;
 	public ArrayDeque<Double> oldy;
+	public int coins;
 	public ObstacleGame() {
+		coins = 0;
 		obstacles = new ArrayList<Rectangle>();
 		velocities = new ArrayList<Pt>();
 		projectiles = new ArrayList<Pt>();
@@ -80,7 +82,7 @@ public class ObstacleGame {
 			}
 		}
 	}
-	public boolean hit(double x, double y, int rad) {
+	public boolean hit(double x, double y, int rad, PointCounter pc) {
 		boolean retVal = false;
 		for (int i=0; i<positions.size(); ++i) {
 			if (x > positions.get(i).x - rad && y > positions.get(i).y - rad && x < rad + positions.get(i).x+obstacles.get(i).width && y < rad + positions.get(i).y+obstacles.get(i).height){
@@ -92,6 +94,8 @@ public class ObstacleGame {
 					positions.get(i).y = 9000;
 					projectiles.get(j).y = 9000;
 					prad += 8;
+					coins += 20;
+					pc.addPoints(20);
 					retVal = true;
 				}
 			}
