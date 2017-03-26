@@ -37,13 +37,9 @@ public class SoundPlayer {
 		
 	}
 	public static void main(String[] args) throws Exception {
-//		SoundPlayer sp = new SoundPlayer("applause_y.wav");
-//		sp.play();
+		SoundPlayer sp = new SoundPlayer("applause_y.wav");
+		sp.play();
 		
-		AudioInputStream audioIn = AudioSystem.getAudioInputStream(new File("soundFiles/applause_y.wav"));
-		Clip clip = AudioSystem.getClip();
-		clip.open(audioIn);
-		clip.start();
 	}
 }
 
